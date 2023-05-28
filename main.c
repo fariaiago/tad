@@ -1,13 +1,15 @@
-#include "ListaEncadeada/lstini.c"
+#include "Pilha/plhlst.c"
 #include <stdio.h>
 
 int main(void)
 {
-	lista_t *lista = lst_ini(9, 1, 2, 3, 4, 5, 6, 7, 8, 9);
-	lst_impr(lista);
-	lst_mod(lista, 5, 25);
-	lst_rm(lista, 2);
-	lst_impr(lista);
-	lst_lib(lista);
+	pilha_t *pilha = plh_ini(3, 1, 2, 3);
+	plh_push(pilha, -5);
+	plh_push(pilha, -2);
+	plh_impr(pilha);
+	int n;
+	plh_pop(pilha, &n);
+	plh_impr(pilha);
+	plh_lib(pilha);
 	return 0;
 }

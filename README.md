@@ -1,2 +1,2 @@
-# playground
-Repositório para Codespace com coisas aleatórias
+# C TAD
+Repositório com implementações de TADs comuns

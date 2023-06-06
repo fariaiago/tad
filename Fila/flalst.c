@@ -28,7 +28,7 @@ fila_t *fla_ini(int num, ...)
 	fila_t *fla = fla_criar();
 	va_start(arg, num);
 	for (int i = 0; i < num; i++)
-		fla_push(fla, va_arg(arg, int));
+		fla_enqueue(fla, va_arg(arg, int));
 	va_end(arg);
 	return fla;
 }
@@ -65,7 +65,7 @@ static no_t *no_ini(int vlr)
 	return n;
 }
 
-bool fla_push(fila_t *fla, int vlr)
+bool fla_enqueue(fila_t *fla, int vlr)
 {
 	if(!fla)
 		return false;
@@ -86,7 +86,7 @@ bool fla_push(fila_t *fla, int vlr)
 	return true;
 }
 
-bool fla_pop(fila_t *fla, int *dest)
+bool fla_dequeue(fila_t *fla, int *dest)
 {
 	if(!fla)
 		return false;

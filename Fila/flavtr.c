@@ -23,7 +23,7 @@ fila_t *fla_ini(int num, ...)
 	fila_t *fla = fla_criar();
 	va_start(arg, num);
 	for (int i = 0; i < num; i++)
-		fla_push(fla, va_arg(arg, int));
+		fla_enqueue(fla, va_arg(arg, int));
 	va_end(arg);
 	return fla;
 }
@@ -41,7 +41,7 @@ static bool fla_cheia(fila_t *fla)
 	return fla->tamanho == CAPACIDADE;
 }
 
-bool fla_push(fila_t *fla, int vlr)
+bool fla_enqueue(fila_t *fla, int vlr)
 {
 	if(!fla || fla_cheia(fla))
 		return false;
@@ -61,7 +61,7 @@ static void fla_mov(fila_t *fla, int tamanho)
 		fla->dados[i] = fla->dados[i + 1];
 }
 
-bool fla_pop(fila_t *fla, int *dest)
+bool fla_dequeue(fila_t *fla, int *dest)
 {
 	if(!fla || fla_vazia(fla))
 		return false;

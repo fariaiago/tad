@@ -10,7 +10,7 @@ int main(void)
 	
 	//Para tamanho < 10 inserção tem de dar certo
 	for (int i = 0; i < 10; i++)
-		assert(fla_push(fla, i) == true);
+		assert(fla_enqueue(fla, i) == true);
 	
 	//Topo da fila tem de ser igual a esperado[0]
 	int vlr1;
@@ -21,13 +21,13 @@ int main(void)
 	for (int i = 0; i < 10; i++)
 	{
 		int vlr;
-		assert(fla_pop(fla, &vlr) == true);
+		assert(fla_dequeue(fla, &vlr) == true);
 		assert(vlr == esperado[i]);
 	}
 
 	//Lista vazia, remoção deve falhar
 	int vlr2;
-	assert(fla_pop(fla, &vlr2) == false);
+	assert(fla_dequeue(fla, &vlr2) == false);
 	fla_lib(fla);
 	return 0;
 }

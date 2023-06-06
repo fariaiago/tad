@@ -57,7 +57,7 @@ bool lst_mod(lista_t *, int, int);
  * @param int Valor do nó a ser removido
  * @return O sucesso da inserção
 */
-void lst_rm(lista_t *, int);
+bool lst_rm(lista_t *, int);
 
 /**
  * Libera uma lista da memória

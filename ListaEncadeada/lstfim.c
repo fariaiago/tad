@@ -92,10 +92,10 @@ bool lst_mod(lista_t *lst, int antigo, int novo)
 	return false;
 }
 
-void lst_rm(lista_t *lst, int valor)
+bool lst_rm(lista_t *lst, int valor)
 {
 	if(!lst->inicio)
-		return;
+		return false;
 	no_t *tmp = lst->inicio, *ant = tmp;
 	while (tmp->prox)
 	{
@@ -103,11 +103,12 @@ void lst_rm(lista_t *lst, int valor)
 		{
 			ant->prox = tmp->prox;
 			free(tmp);
-			break;
+			return true;
 		}
 		ant = tmp;
 		tmp = tmp->prox;
 	}
+	return false;
 }
 
 void lst_lib(lista_t *lst)

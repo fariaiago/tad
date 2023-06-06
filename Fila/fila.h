@@ -31,7 +31,7 @@ void fla_impr(fila_t *);
  * @param int O valor a ser inserido
  * @return O sucesso da operação
 */
-bool fla_push(fila_t *, int);
+bool fla_enqueue(fila_t *, int);
 
 /**
  * Retira um item do topo da fila
@@ -39,7 +39,7 @@ bool fla_push(fila_t *, int);
  * @param int* Destino para o valor
  * @return O sucesso da operação
 */
-bool fla_pop(fila_t *, int *);
+bool fla_dequeue(fila_t *, int *);
 
 /**
  * Lê o item no topo da fila

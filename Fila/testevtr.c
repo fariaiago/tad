@@ -10,22 +10,22 @@ int main(void)
 	
 	//Para tamanho < 10 inserção tem de dar certo
 	for (int i = 0; i < 10; i++)
-		assert(fla_push(fla, i) == true);
+		assert(fla_enqueue(fla, i) == true);
 	
 	//Inserção deve falhar agora, pois a fila esta cheia
-	assert(fla_push(fla, 11) == false);
+	assert(fla_enqueue(fla, 11) == false);
 
 	//Os valores tem de ser recebidos na ordem correta para obedecer FIFO
 	for (int i = 0; i < 10; i++)
 	{
 		int vlr;
-		assert(fla_pop(fla, &vlr) == true);
+		assert(fla_dequeue(fla, &vlr) == true);
 		assert(vlr == esperado[i]);
 	}
 	
 	//Lista vazia, remoção deve falhar
 	int vlr;
-	assert(fla_pop(fla, &vlr) == false);
+	assert(fla_dequeue(fla, &vlr) == false);
 	fla_lib(fla);
 	return 0;
 }

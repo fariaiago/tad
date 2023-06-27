@@ -73,13 +73,9 @@ bool plh_push(pilha_t *plh, int vlr)
 	n->info = vlr;
 	if(!n)
 		return false;
-	if(!plh->topo)
-		plh->topo = n;
-	else
-	{
+	if(plh->topo)
 		n->prox = plh->topo;
-		plh->topo = n;
-	}
+	plh->topo = n;
 	return true;
 }
 

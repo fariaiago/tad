@@ -76,13 +76,12 @@ bool fla_enqueue(fila_t *fla, int vlr)
 	if(!fla->topo)
 	{
 		fla->topo = n;
-		fla->fundo = n;
 	}
 	else
 	{
 		fla->fundo->prox = n;
-		fla->fundo = n;
 	}
+	fla->fundo = n;
 	return true;
 }
 

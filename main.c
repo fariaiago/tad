@@ -11,5 +11,6 @@ int main(void)
 		ArvoreBi_inserir(&abb.super, &V[i]);
 	}
 	ArvoreBi_imprimir(&abb.super);
+	ArvoreBi_destruir(&abb.super);
 	return 0;
 }

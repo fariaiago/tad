@@ -64,4 +64,17 @@ void ArvoreBi_imprimir(ArvoreBi *arb)
 	puts("");
 }
 
-void ArvoreBi_destruir(ArvoreBi *);
+void NoA_destruir(NoA *no)
+{
+	if (no->esq)
+		NoA_destruir(no->esq);
+	if (no->dir)
+		NoA_destruir(no->dir);
+	free(no);
+}
+
+void ArvoreBi_destruir(ArvoreBi *isto)
+{
+	if (isto->raiz)
+		NoA_destruir(isto->raiz);
+}

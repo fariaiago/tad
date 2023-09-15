@@ -1,30 +1,45 @@
 #include "arvorebinaria.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-void ArvoreBi_construtor(ArvoreBi *arv)
+
+void ArvoreBi_construtor(ArvoreBi *isto)
 {
 	static struct ArvoreBiVtbl vtbl = {
 		&ArvoreBi_inserir,
-		&ArvoreBi_remover,
-		&ArvoreBi_procurar
+		&ArvoreBi_remover
 	};
-	arv->vtblptr = &vtbl;
+	isto->vtblptr = &vtbl;
 }
 
-bool ArvoreBi_inserir(ArvoreBi *arb, void *vlr)
+bool ArvoreBi_inserir(ArvoreBi *isto, void *vlr)
 {
-	return arb->vtblptr->inserir(arb, vlr);
+	return isto->vtblptr->inserir(isto, vlr);
 }
 
-bool ArvoreBi_remover(ArvoreBi *arb, void *vlr)
+bool ArvoreBi_remover(ArvoreBi *isto, void *vlr)
 {
-	return arb->vtblptr->remover(arb, vlr);
+	return isto->vtblptr->remover(isto, vlr);
 }
 
-NoA *ArvoreBi_procurar(ArvoreBi *arb, void *vlr)
+NoA *ArvoreBi_procurar(ArvoreBi *isto, void *vlr)
 {
-	return arb->vtblptr->procurar(arb, vlr);
+	NoA *itr = isto->raiz;
+	while (itr && memcmp(vlr, itr->info, isto->tmnh_dados) != 0)
+	{
+		itr = (memcmp(vlr, itr->info, isto->tmnh_dados) < 0) ? itr->esq : itr->dir;
+	}
+	return itr;
+}
+
+NoA *ArvoreBi_minimo(NoA *no)
+{
+	while (no->esq)
+	{
+		no = no->esq;
+	}
+	return no;
 }
 
 void pre(NoA *no)
@@ -54,13 +69,14 @@ void pos(NoA *no)
 		pos(no->dir);
 }
 
-void ArvoreBi_imprimir(ArvoreBi *arb)
+void ArvoreBi_imprimir(ArvoreBi *isto)
 {
-	pre(arb->raiz);
-	puts("");
-	ordem(arb->raiz);
-	puts("");
-	pos(arb->raiz);
+	printf("pre: ");
+	pre(isto->raiz);
+	printf("\nord: ");
+	ordem(isto->raiz);
+	printf("\npos: ");
+	pos(isto->raiz);
 	puts("");
 }
 
@@ -70,6 +86,7 @@ void NoA_destruir(NoA *no)
 		NoA_destruir(no->esq);
 	if (no->dir)
 		NoA_destruir(no->dir);
+	free(no->info);
 	free(no);
 }
 

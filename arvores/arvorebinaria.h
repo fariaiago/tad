@@ -9,9 +9,10 @@
 */
 struct NoArvore
 {
-	void *info;
+	struct NoArvore *pai;
 	struct NoArvore *esq;
 	struct NoArvore *dir;
+	void *info;
 } typedef NoA;
 
 struct ArvoreBiVtbl;
@@ -20,14 +21,13 @@ struct ArvoreBinaria
 {
 	const struct ArvoreBiVtbl *vtblptr;
 	NoA *raiz;
+	size_t tmnh_dados;
 } typedef ArvoreBi;
 
 struct ArvoreBiVtbl
 {
 	bool (*inserir)(ArvoreBi *isto, void *vlr);
 	bool (*remover)(ArvoreBi *isto, void *vlr);
-	NoA *(*procurar)(ArvoreBi *isto, void *vlr);
-	void (*imprimir)(ArvoreBi *isto);
 };
 
 /**
@@ -60,7 +60,12 @@ bool ArvoreBi_remover(ArvoreBi *isto, void *vlr);
 */
 NoA *ArvoreBi_procurar(ArvoreBi *isto, void *vlr);
 
-// int ArvoreBi_minimo(ArvoreBi &arv);
+/**
+ * Encontra o mínimo na subárvore
+ * @param NoA*no Raíz da subárvore
+ * @return Mínimo da subárvore
+*/
+NoA *ArvoreBi_minimo(NoA *no);
 
 // int ArvoreBi_maximo(ArvoreBi &arv);
 

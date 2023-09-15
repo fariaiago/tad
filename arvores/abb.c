@@ -3,18 +3,17 @@
 
 bool ABB_inserir(ArvoreBi *isto, void *vlr);
 bool ABB_remover(ArvoreBi *isto, void *vlr);
-NoA *ABB_procurar(ArvoreBi *isto, void *vlr);
-void ABB_imprimir(ArvoreBi *isto);
 
 void ABB_construtor(ABB *isto, size_t tmnh_dados)
 {
 	static struct ArvoreBiVtbl const vtbl = {
-		&ABB_inserir
+		&ABB_inserir,
+		&ABB_remover
 	};
 	ArvoreBi_construtor(&isto->super);
 	isto->super.vtblptr = &vtbl;
 	isto->super.raiz = NULL;
-	isto->tmnh_dados = tmnh_dados;
+	isto->super.tmnh_dados = tmnh_dados;
 }
 
 static NoA *no_criar(void *vlr, size_t tmnh_dados)
@@ -35,7 +34,7 @@ bool ABB_inserir(ArvoreBi *isto, void *vlr)
 	ABB *isto_abb = (ABB *) isto;
 	if(!isto)
 		return false;
-	NoA *n = no_criar(vlr, isto_abb->tmnh_dados);
+	NoA *n = no_criar(vlr, isto_abb->super.tmnh_dados);
 	if (!n)
 		return false;
 	
@@ -46,9 +45,10 @@ bool ABB_inserir(ArvoreBi *isto, void *vlr)
 		NoA *itr = isto->raiz;
 		while(true)
 		{
-			if (memcmp(n->info, itr->info, 4) < 0)
+			if (memcmp(n->info, itr->info, isto_abb->super.tmnh_dados) < 0)
 				if (!itr->esq)
 				{
+					n->pai = itr;
 					itr->esq = n;
 					break;
 				}
@@ -57,6 +57,7 @@ bool ABB_inserir(ArvoreBi *isto, void *vlr)
 			else
 				if (!itr->dir)
 				{
+					n->pai = itr;
 					itr->dir = n;
 					break;
 				}
@@ -67,15 +68,55 @@ bool ABB_inserir(ArvoreBi *isto, void *vlr)
 	return true;
 }
 
+void NoA_transplantar(ArvoreBi *isto, NoA *ant, NoA *novo)
+{
+	if (!ant->pai)
+	{
+		isto->raiz = novo;
+	}
+	else if (ant == ant->pai->esq)
+	{
+		ant->pai->esq = novo;
+	}
+	else
+	{
+		ant->pai->dir = novo;
+	}
+	if (novo)
+	{
+		novo->pai = ant->pai;
+	}
+}
+
 bool ABB_remover(ArvoreBi *isto, void *vlr)
 {
+	NoA *rm = ArvoreBi_procurar(isto, vlr);
+	if (!rm)
+	{
+		return false;
+	}
+	if (!rm->esq)
+	{
+		NoA_transplantar(isto, rm, rm->dir);
+	}
+	else if (!rm->dir)
+	{
+		NoA_transplantar(isto, rm, rm->esq);
+	}
+	else
+	{
+		NoA *min = ArvoreBi_minimo(rm->dir);
+		if (min->pai != rm)
+		{
+			NoA_transplantar(isto, min, min->dir);
+			min->dir = rm->dir;
+			min->dir->pai = min;
+		}
+		NoA_transplantar(isto, rm, min);
+		min->esq = rm->esq;
+		min->esq->pai = min;
+	}
+	free(rm->info);
+	free(rm);
 	return true;
 }
-
-NoA *ABB_procurar(ArvoreBi *isto, void *vlr)
-{
-	return NULL;
-}
-
-void ABB_imprimir(ArvoreBi *isto)
-{}

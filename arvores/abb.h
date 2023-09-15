@@ -6,7 +6,6 @@
 typedef struct
 {
 	ArvoreBi super;
-	size_t tmnh_dados;
 } ABB;
 
 void ABB_construtor(ABB *abb, size_t tmnh_dados);

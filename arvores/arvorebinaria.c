@@ -42,6 +42,27 @@ NoA *ArvoreBi_minimo(NoA *no)
 	return no;
 }
 
+int NoA_altura(NoA *no)
+{
+	if (!no)
+	{
+		return -1;
+	}
+	else
+	{
+		int he = NoA_altura(no->esq),
+		hd = NoA_altura(no->dir);
+		if (he < hd)
+		{
+			return he + 1;
+		}
+		else
+		{
+			return hd + 1;
+		}
+	}
+}
+
 void pre(NoA *no)
 {
 	printf("%d ", *(int *)no->info);

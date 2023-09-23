@@ -8,6 +8,6 @@ typedef struct
 	ArvoreBi super;
 } ABB;
 
-void ABB_construtor(ABB *abb, size_t tmnh_dados);
+void ABB_construtor(ABB *isto, size_t tmnh_dados);
 
 #endif

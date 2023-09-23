@@ -67,11 +67,12 @@ NoA *ArvoreBi_procurar(ArvoreBi *isto, void *vlr);
 */
 NoA *ArvoreBi_minimo(NoA *no);
 
-// int ArvoreBi_maximo(ArvoreBi &arv);
-
-// int ArvoreBi_antecessor(ArvoreBi &arv);
-
-// int ArvoreBi_sucessor(ArvoreBi &arv);
+/**
+ * Enconta a altura da subárvore com raíz NoA nó
+ * @param NoA*no Nó raíz da subárvore
+ * @return A altura do nó
+*/
+int NoA_altura(NoA *no);
 
 /**
  * Imprime uma árvore

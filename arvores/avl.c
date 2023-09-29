@@ -1,10 +1,11 @@
 #include "avl.h"
+#include <stdio.h>
 #include <string.h>
 
 bool AVL_inserir(ArvoreBi *isto, void *vlr);
 bool AVL_remover(ArvoreBi *isto, void *vlr);
 
-void ABB_construtor(AVL *isto, size_t tmnh_dados)
+void AVL_construtor(AVL *isto, size_t tmnh_dados)
 {
 	static struct ArvoreBiVtbl const vtbl = {
 		&AVL_inserir,
@@ -30,78 +31,91 @@ static NoAVL *no_criar(void *vlr, size_t tmnh_dados)
 	return n;
 }
 
-void AVL_rebalancear(NoAVL *no, NoAVL *pai)
+void AVL_rebalancear(AVL *avl, NoAVL *no, NoAVL *pai)
 {
-	if (no->balanco == -1) // Rotação a esquerda
+	if (no->balanco == 1) // Rotação a esquerda
 	{
-		NoAVL *filho = no->super.dir;
-		if ( ((NoAVL *) no->super.dir)->balanco < 0) // Rotação dupla
+		NoAVL *itr = no;
+		while (itr)
 		{
-			NoAVL *neto = no->super.dir->esq;
-			if (no->super.pai->esq = no)
+			itr->balanco -= 1;
+			itr = (NoAVL *) itr->super.pai;
+		}
+		NoAVL *filho = (NoAVL *) no->super.dir;
+		if (no->super.pai) //Atualiza o filho do pai se ele existe
+		{
+			if ((NoAVL *) no->super.pai->esq == no)
 			{
-				no->super.pai->esq = filho;
+				no->super.pai->esq = &filho->super;
 			}
 			else
 			{
-				no->super.pai->dir = filho;
+				no->super.pai->dir = &filho->super;
 			}
-			no->super.pai = neto;
+		}
+		if (no->super.dir && ((NoAVL *) no->super.dir)->balanco < 0) // Rotação dupla
+		{
+			NoAVL *neto = (NoAVL *) no->super.dir->esq;
+			no->super.pai = &neto->super;
 			no->super.dir = neto->super.esq;
-			filho->super.pai = neto;
+			filho->super.pai = &neto->super;
 			filho->super.esq = neto->super.dir;
-			neto->super.esq = no;
-			neto->super.dir = filho;
+			neto->super.esq = &no->super;
+			neto->super.dir = &filho->super;
 		}
 		else // Rotação simples
 		{
-			if (no->super.pai->esq = no)
-			{
-				no->super.pai->esq = filho;
-			}
-			else
-			{
-				no->super.pai->dir = filho;
-			}
-			no->super.pai = filho;
+			filho->super.pai = no->super.pai;
+			no->super.pai = &filho->super;
 			no->super.dir = filho->super.esq;
-			filho->super.esq = no;
+			filho->super.esq = &no->super;
+			printf("{} %d %d e%p t%p d%p ||\n", no->balanco, *((int *)no->super.info), no->super.esq, no, no->super.dir );
+		}
+		if (!filho->super.pai)
+		{
+			avl->super.raiz = &filho->super;
 		}
 	}
 	else // Rotação a direita
 	{
-		NoAVL *filho = no->super.esq;
-		if (((NoAVL *) no->super.dir)->balanco > 0) // Rotação dupla
+		NoAVL *itr = no;
+		while (itr)
 		{
-			NoAVL *neto = no->super.esq->dir;
-			if (no->super.pai->esq = no)
+			itr->balanco += 1;
+			itr = (NoAVL *) itr->super.pai;
+		}
+		NoAVL *filho = (NoAVL *) no->super.esq;
+		if (no->super.pai) //Atualiza o filho do pai se ele existe
+		{
+			if ((NoAVL *) no->super.pai->esq == no)
 			{
-				no->super.pai->esq = filho;
+				no->super.pai->esq = &filho->super;
 			}
 			else
 			{
-				no->super.pai->dir = filho;
+				no->super.pai->dir = &filho->super;
 			}
-			no->super.pai = neto;
+		}
+		if (((NoAVL *) no->super.dir)->balanco > 0) // Rotação dupla
+		{
+			NoAVL *neto = (NoAVL *) no->super.esq->dir;
+			no->super.pai = &neto->super;
 			no->super.esq = neto->super.dir;
-			filho->super.pai = neto;
+			filho->super.pai = &neto->super;
 			filho->super.dir = neto->super.esq;
-			neto->super.dir = no;
-			neto->super.esq = filho;
+			neto->super.dir = &no->super;
+			neto->super.esq = &filho->super;
 		}
 		else // Rotação simples
 		{
-			if (no->super.pai->esq = no)
-			{
-				no->super.pai->esq = filho;
-			}
-			else
-			{
-				no->super.pai->dir = filho;
-			}
-			no->super.pai = filho;
+			filho->super.pai = no->super.pai;
+			no->super.pai = &filho->super;
 			no->super.esq = filho->super.dir;
-			filho->super.dir = no;
+			filho->super.dir = &no->super;
+		}
+		if (!filho->super.pai)
+		{
+			avl->super.raiz = &filho->super;
 		}
 	}
 }
@@ -116,19 +130,20 @@ bool AVL_inserir(ArvoreBi *isto, void *vlr)
 		return false;
 	
 	if(!isto->raiz)
-		isto->raiz = n;
+		isto->raiz = &n->super;
 	else
 	{
-		NoAVL *itr = isto->raiz;
+		NoAVL *itr = (NoAVL *) isto->raiz;
 		while(true)
 		{
 			if (memcmp(n->super.info, itr->super.info, isto_avl->super.tmnh_dados) < 0)
-				if (!itr->super.esq)
+				if (!itr->super.esq) // Inserção à esquerda
 				{
-					n->super.pai = itr;
-					itr->super.esq = n;
+					n->super.pai = &itr->super;
+					itr->super.esq = &n->super;
 					while (itr->super.pai)
 					{
+						itr = (NoAVL *) itr->super.pai;
 						switch (itr->balanco)
 						{
 						case 0:
@@ -136,26 +151,27 @@ bool AVL_inserir(ArvoreBi *isto, void *vlr)
 							itr->balanco -= 1;
 							break;
 						case -1:
-							AVL_rebalancear(itr, itr->super.pai);
+							AVL_rebalancear(isto_avl, itr, (NoAVL *) itr->super.pai);
+							break;
 						default:
 							itr->balanco -= 1;
 							break;
 						}
-						itr = itr->super.pai;
 					}
 					break;
 				}
 				else
 				{
-					itr = itr->super.esq;
+					itr = (NoAVL *) itr->super.esq;
 				}
 			else
-				if (!itr->super.dir)
+				if (!itr->super.dir) // Inserção à direita
 				{
-					n->super.pai = itr;
-					itr->super.dir = n;
+					n->super.pai = &itr->super;
+					itr->super.dir = &n->super;
 					while (itr->super.pai)
 					{
+						itr = (NoAVL *) itr->super.pai;
 						switch (itr->balanco)
 						{
 						case -1:
@@ -163,17 +179,18 @@ bool AVL_inserir(ArvoreBi *isto, void *vlr)
 							itr->balanco += 1;
 							break;
 						case 1:
-							AVL_rebalancear(itr, itr->super.pai);
+							AVL_rebalancear(isto_avl, itr, (NoAVL *) itr->super.pai);
+							break;
 						default:
 							itr->balanco += 1;
 							break;
 						}
-						itr = itr->super.pai;
+						// printf(" %d %d %p %p |", itr->balanco, *((int *)itr->super.info), itr->super.esq, itr->super.dir );
 					}
 					break;
 				}
 				else
-					itr = itr->super.dir;
+					itr = (NoAVL *) itr->super.dir;
 		}
 	}
 	return true;

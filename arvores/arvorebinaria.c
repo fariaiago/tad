@@ -3,12 +3,15 @@
 #include <stdlib.h>
 #include <string.h>
 
+void _ArvoreBi_destruir(ArvoreBi *isto);
 
 void ArvoreBi_construtor(ArvoreBi *isto)
 {
 	static struct ArvoreBiVtbl vtbl = {
+//		NULL,
 		&ArvoreBi_inserir,
 		&ArvoreBi_remover
+//		,&_ArvoreBi_destruir
 	};
 	isto->vtblptr = &vtbl;
 }
@@ -83,11 +86,11 @@ void ordem(NoA *no)
 
 void pos(NoA *no)
 {
-	printf("%d ", *(int *)no->info);
 	if (no->esq)
 		pos(no->esq);
 	if (no->dir)
 		pos(no->dir);
+	printf("%d ", *(int *)no->info);
 }
 
 void ArvoreBi_imprimir(ArvoreBi *isto)
@@ -113,6 +116,11 @@ void NoA_destruir(NoA *no)
 
 void ArvoreBi_destruir(ArvoreBi *isto)
 {
+	/*isto->vtblptr->destruir(isto);
+}
+
+void _ArvoreBi_destruir(ArvoreBi *isto)
+{*/
 	if (isto->raiz)
 		NoA_destruir(isto->raiz);
 }

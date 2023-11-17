@@ -1,16 +1,16 @@
-#include "arvores/avl.h"
+#include "arvores/arb.h"
 #include <stdio.h>
 
 int main(int argc, char* argv[])
 {
-	int V[] = {4, 6, 2};
-	AVL avl;
-	AVL_construtor(&avl, sizeof(int));
-	for (int i = 0; i < 3; i++)
+	int V[] = {1, 2, 3, 4, 5};
+	ARB arb;
+	ARB_construtor(&arb, sizeof(int));
+	for (int i = 0; i < 5; i++)
 	{
-		ArvoreBi_inserir(&avl.super, &V[i]);
-		ArvoreBi_imprimir(&avl.super);
+		ArvoreBi_inserir(&arb.super, &V[i]);
+		ArvoreBi_imprimir(&arb.super);
 	}
-	ArvoreBi_destruir(&avl.super);
+	// ArvoreBi_destruir(&arb.super);
 	return EXIT_SUCCESS;
 }

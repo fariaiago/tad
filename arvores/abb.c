@@ -6,11 +6,12 @@ bool ABB_remover(ArvoreBi *isto, void *vlr);
 
 void ABB_construtor(ABB *isto, size_t tmnh_dados)
 {
+	ArvoreBi_construtor(&isto->super);
 	static struct ArvoreBiVtbl const vtbl = {
 		&ABB_inserir,
 		&ABB_remover
 	};
-	ArvoreBi_construtor(&isto->super);
+	vtbl.super =isto->super.vtblptr;
 	isto->super.vtblptr = &vtbl;
 	isto->super.raiz = NULL;
 	isto->super.tmnh_dados = tmnh_dados;

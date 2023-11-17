@@ -26,8 +26,10 @@ struct ArvoreBinaria
 
 struct ArvoreBiVtbl
 {
+//	struct ArvoreBiVtbl *super;
 	bool (*inserir)(ArvoreBi *isto, void *vlr);
 	bool (*remover)(ArvoreBi *isto, void *vlr);
+//	void (*destruir)(ArvoreBi *isto);
 };
 
 /**
@@ -85,5 +87,11 @@ void ArvoreBi_imprimir(ArvoreBi *isto);
  * @param ArvoreBi* Árvore que será liberada
 */
 void ArvoreBi_destruir(ArvoreBi *isto);
+
+/**
+ * Libera a memória de um nó
+ * @param NoA* Nó que será liberado
+*/
+void NoA_destruir(NoA *no);
 
 #endif
